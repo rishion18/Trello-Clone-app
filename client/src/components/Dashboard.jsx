@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import '../App.css';
 import ListCard from './AllListsCard.jsx';
-import { fetchLists, fetchTasks, updateTaskList } from '../store/DashboardReducers.js';
+import { fetchLists, updateTaskList } from '../store/DashboardReducers.js';
 import {useDispatch , useSelector} from 'react-redux';
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import { DragDropContext } from 'react-beautiful-dnd';
 
 
 const Dashboard = () => {
@@ -13,9 +13,10 @@ const dispatch = useDispatch();
 
     useEffect(() => {
         dispatch(fetchLists());
-    } , [dispatch]);
+    } , []);
 
-    const { allLists} = useSelector((state) => state.Dashboard);
+
+    const { allLists } = useSelector((state) => state.Dashboard);
 
     const[listName , setListName] = useState('');
     const[listPopUp , setListPopUp] = useState(false);
@@ -36,6 +37,7 @@ const dispatch = useDispatch();
               "Content-Type": "application/json",
             },
           });
+          dispatch(fetchLists());
           setListPopUp(false);
         } catch (e) {
           console.log(e.message);
@@ -54,8 +56,7 @@ const dispatch = useDispatch();
             const draggedTaskId = result.draggableId;
       
             dispatch(updateTaskList(draggedTaskId, destinationListId));
-            dispatch(fetchTasks(sourceListId));
-            dispatch(fetchTasks(destinationListId));
+            
          }
     }
 

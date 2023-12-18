@@ -14,8 +14,9 @@ export const addList = async(req , res) => {
 export const addTaskToList = async(req , res) => {
   try{
  const task = req.body;
- await taskList.create(task);
- res.status(200).send({status: true , message:`new task added to list ${task.list}`});
+ const newTask = await taskList.create(task);
+ console.log(newTask);
+ res.status(200).send({status: true , newTask , message:`new task added to list ${task.list}`});
 
   }catch(error){
     res.status(500).send({status: true , message: error.message});
@@ -31,6 +32,16 @@ export const getTasks = async(req , res) => {
   const data = await taskList.find({list:req.params.listId});
   res.status(200).send(data);
 }
+
+export const getAllTasks = async () => {
+  try {
+    const allTasks = await taskList.find();
+    return allTasks;
+  } catch (error) {
+    console.error('Error fetching tasks:', error.message);
+    throw error;
+  }
+};
 
 export const updateListId = async(req , res) => {
 try{

@@ -14,13 +14,16 @@ const DashboardSlice = createSlice({
       state.tasks = [...state.tasks, ...action.payload];
     },
     addNewTask:(state , action) => {
-      state.tasks = [...state.tasks, ...action.payload];
+      state.tasks = [...state.tasks, action.payload];
     },
-
+    updateTasks:(state , action) => {
+      state.tasks = state.tasks.map((task) => task._id === action.payload._id? action.payload : task);
+    }
+    
   },
 });
 
-export const { setLists , setTasks , clearTask} = DashboardSlice.actions;
+export const { setLists , setTasks , clearTask , addNewTask , updateTasks} = DashboardSlice.actions;
 
 export default DashboardSlice.reducer;
 
@@ -48,10 +51,22 @@ export const fetchTasks = (listId) => {
   };
 };
 
+// export const fetchAllTasks = () => {
+//   return async (dispatch) => {
+//     try {
+//       const data = await fetch(`http://localhost:5056/api/action/allTasks`);
+//       const tasks = await data.json();
+//       dispatch(setTasks(tasks));
+//     } catch (error) {
+//       console.error("Error fetching Tasks:", error);
+//     }
+//   };
+// };
+
 export const updateTaskList = (draggedTaskId, destinationListId) => {
-  return async() => {
+  return async(dispatch) => {
     try{
-      await fetch(`http://localhost:5056/api/action/updateTask/${draggedTaskId}`, {
+      const updatedTask = await fetch(`http://localhost:5056/api/action/updateTask/${draggedTaskId}`, {
         method: "PUT",
         body: JSON.stringify({
           list: destinationListId,
@@ -60,10 +75,13 @@ export const updateTaskList = (draggedTaskId, destinationListId) => {
           "Content-Type": "application/json",
         },
       });
+      const data = await updatedTask.json();
+      dispatch(updateTasks(data.updatedTask));
     }catch(e){
       console.error(e.message);
     }
   }
 }
+
 
 
