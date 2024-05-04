@@ -4,8 +4,8 @@ import connectToDatabase from './config/dbConfig.js';
 import memberRoutes from './routes/member.routes.js';
 import actionRoutes from './routes/actions.routes.js'
 import cookieParser from "cookie-parser";
-import cors from 'cors';
-config();
+import cors from 'cors'
+ config();
 
 const app = express();
 
